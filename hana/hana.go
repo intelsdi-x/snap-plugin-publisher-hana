@@ -8,6 +8,7 @@ import (
 	"strconv"
 	"strings"
 	"time"
+	"reflect"
 
 	log "github.com/Sirupsen/logrus"
 
@@ -202,7 +203,7 @@ func interfaceToString(face interface{}) (string, error) {
 	case string:
 		ret = val
 	default:
-		err = errors.New("unsupported type: " + val)
+		err = errors.New("unsupported type")
 	}
 	return ret, err
 }
