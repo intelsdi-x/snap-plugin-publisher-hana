@@ -176,7 +176,7 @@ func sliceToString(slice []string) string {
 	return strings.Join(slice, ", ")
 }
 
-// Supported types: []string, []int, int, string
+// Supported types: []string, []int, int, uint64, float32, float64, string
 func interfaceToString(face interface{}) (string, error) {
 	var (
 		ret string
@@ -200,10 +200,16 @@ func interfaceToString(face interface{}) (string, error) {
 		}
 	case int:
 		ret = strconv.Itoa(val)
+	case uint64:
+		ret = strconv.FormatUint(val, 10)
+	case float32:
+		ret = strconv.FormatFloat(float64(val), 'E', -1, 32)
+	case float64:
+		ret = strconv.FormatFloat(val, 'E', -1, 64)
 	case string:
 		ret = val
 	default:
-		err = errors.New("unsupported type: " + reflect.TypeOf(face).String())
+		err = errors.New("Unsupported type: " + reflect.TypeOf(face).String())
 	}
 	return ret, err
 }
