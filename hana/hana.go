@@ -203,7 +203,7 @@ func interfaceToString(face interface{}) (string, error) {
 	case string:
 		ret = val
 	default:
-		err = errors.New("unsupported type")
+		err = errors.New("unsupported type: " + reflect.TypeOf(face).String())
 	}
 	return ret, err
 }
