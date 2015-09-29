@@ -73,22 +73,44 @@ func (s *HANAPublisher) Publish(contentType string, content []byte, config map[s
 	}
 
 	// Create the table if it's not already there
-	_, err = db.Exec( 
-		"IF ( select count(*) from \"PUBLIC\".\"M_TABLES\" where schema_name = '" + database + 
-		"' and table_name = '" + tableName + "' ) > 0 then " +
-		"  exec 'CREATE COLUMN TABLE '||" + database + "||'.'||" + tableName + "( " + tableColumns + "); " +
-		"END IF;" )
-	//err = db.Exec("CREATE TABLE IF NOT EXISTS" + " " + tableName + " " + tableColumns)
+	_, err = db.Exec( "DROP PROCEDURE ifexists" )
+
 	if err != nil {
-		logger.Printf("Error: %v", err)
+		logger.Printf("Error while dropping procedure: %v", err)
+	}
+	
+	createTableStr := 
+		"CREATE PROCEDURE ifexists( ) LANGUAGE SQLSCRIPT AS myrowid integer;\n" +
+		"BEGIN\n" +
+		" myrowid := 0;\n" +
+		" SELECT COUNT(*) INTO myrowid FROM \"PUBLIC\".\"M_TABLES\" " +
+		" WHERE schema_name = '" + database + "' AND table_name = '" + tableName + "';\n" +
+		" IF :myrowid = 0 THEN\n" +
+		"  exec 'CREATE COLUMN TABLE \"" + database + "\".\"" + tableName + "\" " + tableColumns + "';\n " +
+		" END IF;\n" +
+	  "END;"
+	
+	_, err = db.Exec( createTableStr )
+	
+	if err != nil {
+		logger.Printf("Error while creating procedure: %v", err)
+		logger.Printf( "Query: %v", createTableStr )
+	}
+
+	_, err = db.Exec( "CALL ifexists" )
+
+	if err != nil {
+		logger.Printf("Error while invoking procedure: %v", err)
+
 		return err
 	}
 
 	// Put the values into the database with the current time
 	tableValues := "VALUES( ?, ?, ? )"
-	insert, err := db.Prepare("INSERT INTO" + " " + tableName + " " + tableValues)
+	insert, err := db.Prepare("INSERT INTO " + database + "." + tableName + " " + tableValues)
 	if err != nil {
 		logger.Printf("Error: %v", err)
+		logger.Printf( "tablename: " + database + "." + tableName + ", tableValues: " + tableValues )
 		return err
 	}
 	nowTime := time.Now()
@@ -180,7 +202,7 @@ func interfaceToString(face interface{}) (string, error) {
 	case string:
 		ret = val
 	default:
-		err = errors.New("unsupported type")
+		err = errors.New("unsupported type: " + val)
 	}
 	return ret, err
 }
