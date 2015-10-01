@@ -7,7 +7,6 @@ import (
 	"fmt"
 	"strconv"
 	"strings"
-	"time"
 	"reflect"
 
 	log "github.com/Sirupsen/logrus"
@@ -40,15 +39,15 @@ func (s *HANAPublisher) Publish(contentType string, content []byte, config map[s
 	var metrics []plugin.PluginMetricType
 
 	switch contentType {
-	case plugin.PulseGOBContentType:
-		dec := gob.NewDecoder(bytes.NewBuffer(content))
-		if err := dec.Decode(&metrics); err != nil {
-			logger.Printf("Error decoding: error=%v content=%v", err, content)
-			return err
-		}
-	default:
-		logger.Printf("Error unknown content type '%v'", contentType)
-		return errors.New(fmt.Sprintf("Unknown content type '%s'", contentType))
+		case plugin.PulseGOBContentType:
+			dec := gob.NewDecoder(bytes.NewBuffer(content))
+			if err := dec.Decode(&metrics); err != nil {
+				logger.Printf("Error decoding: error=%v content=%v", err, content)
+				return err
+			}
+		default:
+			logger.Printf("Error unknown content type '%v'", contentType)
+			return errors.New(fmt.Sprintf("Unknown content type '%s'", contentType))
 	}
 
 	logger.Printf("publishing %v to %v", metrics, config)
@@ -60,7 +59,7 @@ func (s *HANAPublisher) Publish(contentType string, content []byte, config map[s
 	database := config["database"].(ctypes.ConfigValueStr).Value
 	port := config["port"].(ctypes.ConfigValueStr).Value
 	tableName := config["table name"].(ctypes.ConfigValueStr).Value
-	tableColumns := "(time_posted VARCHAR(200), key_column VARCHAR(200), value_column VARCHAR(200))"
+	tableColumns := "(timestamp VARCHAR(200), source VARCHAR(200), key VARCHAR(200), value VARCHAR(200))"
 	db, err := sql.Open( driver.DriverName, "hdb://"+username+":"+password+"@"+host+":"+port+"/"+database)
 	defer db.Close()
 	if err != nil {
@@ -107,20 +106,20 @@ func (s *HANAPublisher) Publish(contentType string, content []byte, config map[s
 	}
 
 	// Put the values into the database with the current time
-	tableValues := "VALUES( ?, ?, ? )"
+	tableValues := "VALUES( ?, ?, ?, ? )"
 	insert, err := db.Prepare("INSERT INTO " + database + "." + tableName + " " + tableValues)
 	if err != nil {
 		logger.Printf("Error: %v", err)
 		logger.Printf( "tablename: " + database + "." + tableName + ", tableValues: " + tableValues )
 		return err
 	}
-	nowTime := time.Now()
+
 	var key, value string
 	for _, m := range metrics {
 		key = sliceToString(m.Namespace())
 		value, err = interfaceToString(m.Data())
 		if err == nil {
-			_, err := insert.Exec(nowTime, key, value)
+			_, err := insert.Exec(m.Timestamp(), m.Source(), key, value)
 			if err != nil {
 				panic(err)
 				logger.Printf("Error: %v", err)
@@ -130,16 +129,24 @@ func (s *HANAPublisher) Publish(contentType string, content []byte, config map[s
 		}
 	}
 
-	return nil
+	return err
 }
 
 func Meta() *plugin.PluginMeta {
 	return plugin.NewPluginMeta(name, version, pluginType, []string{plugin.PulseGOBContentType}, []string{plugin.PulseGOBContentType})
 }
 
-func (f *HANAPublisher) GetConfigPolicy() cpolicy.ConfigPolicy {
+func (f *HANAPublisher) GetConfigPolicy() (*cpolicy.ConfigPolicy, error) {
 	cp := cpolicy.New()
 	config := cpolicy.NewPolicyNode()
+
+	host, err := cpolicy.NewStringRule("host", true, "root")
+	handleErr(err)
+	host.Description = "HANA host to which we will connect"
+
+	port, err := cpolicy.NewStringRule("port", true, "root")
+	handleErr(err)
+	port.Description = "HANA port to which we will connect"
 
 	username, err := cpolicy.NewStringRule("username", true, "root")
 	handleErr(err)
@@ -157,13 +164,15 @@ func (f *HANAPublisher) GetConfigPolicy() cpolicy.ConfigPolicy {
 	handleErr(err)
 	tableName.Description = "The HANA table within the database where information will be stored"
 
+	config.Add(host)
 	config.Add(username)
 	config.Add(password)
 	config.Add(database)
+	config.Add(port)
 	config.Add(tableName)
 
 	cp.Add([]string{""}, config)
-	return *cp
+	return cp, nil
 }
 
 func handleErr(e error) {
