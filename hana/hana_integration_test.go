@@ -1,3 +1,5 @@
+// +build integration
+
 package hana
 
 import (
@@ -34,11 +36,15 @@ func TestHANAPublish(t *testing.T) {
 		config["port"] = ctypes.ConfigValueStr{Value: "1433"}
 		config["table name"] = ctypes.ConfigValueStr{Value: "info"}
 		sp := NewHANAPublisher()
-		So(sp, ShouldNotBeNil)
-		err := sp.Publish("", buf.Bytes(), config)
-		So(err, ShouldResemble, errors.New("Unknown content type ''"))
-		err = sp.Publish(plugin.PulseGOBContentType, buf.Bytes(), config)
-		meta := Meta()
-		So(meta, ShouldNotBeNil)
+		cp, _ := sp.GetConfigPolicy()
+		cfg, _ := cp.Get([]string{""}).Process(config)
+		err := sp.Publish("", buf.Bytes(), *cfg)
+		Convey("So not passing in a content type should result in an error", func() {
+			So(err, ShouldResemble, errors.New("Unknown content type ''"))
+		})
+		err = sp.Publish(plugin.PulseGOBContentType, buf.Bytes(), *cfg)
+		Convey("So publishing metrics should not result in an error", func() {
+			So(err, ShouldBeNil)
+		})
 	})
 }
