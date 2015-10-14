@@ -38,8 +38,8 @@ if [[ $TEST_SUITE == "unit" ]]; then
 	go get golang.org/x/tools/cmd/cover
 	
 	COVERALLS_TOKEN=t47LG6BQsfLwb9WxB56hXUezvwpED6D11
-	TEST_DIRS="main.go influx/"
-	VET_DIRS=". ./influx/..."
+	TEST_DIRS="main.go hana/"
+	VET_DIRS=". ./hana/..."
 
 	set -e
 
@@ -99,9 +99,4 @@ if [[ $TEST_SUITE == "unit" ]]; then
 	#         sleep 30
 	#     done
 	# fi
-elif [[ $TEST_SUITE == "integration" ]]; then
-	cd scripts/docker/$INFLUX_VERSION; docker build -t intelsdi-x/influxdb:$INFLUX_VERSION .
-        docker run -d --net=host -e PRE_CREATE_DB="test" intelsdi-x/influxdb:$INFLUX_VERSION	
-	cd $PULSE_PLUGIN_SOURCE
-	PULSE_INFLUXDB_HOST=127.0.0.1 go test -v --tags=integration ./...
 fi
