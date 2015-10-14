@@ -58,7 +58,7 @@ func (s *HANAPublisher) Publish(contentType string, content []byte, config map[s
 	host := config["host"].(ctypes.ConfigValueStr).Value
 	database := config["database"].(ctypes.ConfigValueStr).Value
 	port := config["port"].(ctypes.ConfigValueStr).Value
-	tableName := config["table name"].(ctypes.ConfigValueStr).Value
+	tableName := config["tablename"].(ctypes.ConfigValueStr).Value
 	tableColumns := "(timestamp VARCHAR(200), source VARCHAR(200), key VARCHAR(200), value VARCHAR(200))"
 	db, err := sql.Open(driver.DriverName, "hdb://"+username+":"+password+"@"+host+":"+port+"/"+database)
 	defer db.Close()
@@ -144,7 +144,7 @@ func (f *HANAPublisher) GetConfigPolicy() (*cpolicy.ConfigPolicy, error) {
 	handleErr(err)
 	host.Description = "HANA host to which we will connect"
 
-	port, err := cpolicy.NewStringRule("port", true, "root")
+	port, err := cpolicy.NewStringRule("port", true, "30017")
 	handleErr(err)
 	port.Description = "HANA port to which we will connect"
 
@@ -160,7 +160,7 @@ func (f *HANAPublisher) GetConfigPolicy() (*cpolicy.ConfigPolicy, error) {
 	handleErr(err)
 	database.Description = "The HANA database that data will be pushed to"
 
-	tableName, err := cpolicy.NewStringRule("table name", true, "info")
+	tableName, err := cpolicy.NewStringRule("tablename", true, "info")
 	handleErr(err)
 	tableName.Description = "The HANA table within the database where information will be stored"
 
