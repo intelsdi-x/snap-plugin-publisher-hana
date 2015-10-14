@@ -5,9 +5,9 @@ import (
 	"encoding/gob"
 	"errors"
 	"fmt"
+	"reflect"
 	"strconv"
 	"strings"
-	"reflect"
 
 	log "github.com/Sirupsen/logrus"
 
@@ -21,7 +21,7 @@ import (
 
 const (
 	name       = "hana"
-	version    = 1
+	version    = 2
 	pluginType = plugin.PublisherPluginType
 )
 
@@ -39,15 +39,15 @@ func (s *HANAPublisher) Publish(contentType string, content []byte, config map[s
 	var metrics []plugin.PluginMetricType
 
 	switch contentType {
-		case plugin.PulseGOBContentType:
-			dec := gob.NewDecoder(bytes.NewBuffer(content))
-			if err := dec.Decode(&metrics); err != nil {
-				logger.Printf("Error decoding: error=%v content=%v", err, content)
-				return err
-			}
-		default:
-			logger.Printf("Error unknown content type '%v'", contentType)
-			return errors.New(fmt.Sprintf("Unknown content type '%s'", contentType))
+	case plugin.PulseGOBContentType:
+		dec := gob.NewDecoder(bytes.NewBuffer(content))
+		if err := dec.Decode(&metrics); err != nil {
+			logger.Printf("Error decoding: error=%v content=%v", err, content)
+			return err
+		}
+	default:
+		logger.Printf("Error unknown content type '%v'", contentType)
+		return errors.New(fmt.Sprintf("Unknown content type '%s'", contentType))
 	}
 
 	logger.Printf("publishing %v to %v", metrics, config)
@@ -60,7 +60,7 @@ func (s *HANAPublisher) Publish(contentType string, content []byte, config map[s
 	port := config["port"].(ctypes.ConfigValueStr).Value
 	tableName := config["table name"].(ctypes.ConfigValueStr).Value
 	tableColumns := "(timestamp VARCHAR(200), source VARCHAR(200), key VARCHAR(200), value VARCHAR(200))"
-	db, err := sql.Open( driver.DriverName, "hdb://"+username+":"+password+"@"+host+":"+port+"/"+database)
+	db, err := sql.Open(driver.DriverName, "hdb://"+username+":"+password+"@"+host+":"+port+"/"+database)
 	defer db.Close()
 	if err != nil {
 		logger.Printf("Error: %v", err)
@@ -73,31 +73,31 @@ func (s *HANAPublisher) Publish(contentType string, content []byte, config map[s
 	}
 
 	// Create the table if it's not already there
-	_, err = db.Exec( "DROP PROCEDURE ifexists" )
+	_, err = db.Exec("DROP PROCEDURE ifexists")
 
 	if err != nil {
 		logger.Printf("Error while dropping procedure: %v", err)
 	}
-	
-	createTableStr := 
+
+	createTableStr :=
 		"CREATE PROCEDURE ifexists( ) LANGUAGE SQLSCRIPT AS myrowid integer;\n" +
-		"BEGIN\n" +
-		" myrowid := 0;\n" +
-		" SELECT COUNT(*) INTO myrowid FROM \"PUBLIC\".\"M_TABLES\" " +
-		" WHERE schema_name = '" + database + "' AND table_name = '" + tableName + "';\n" +
-		" IF :myrowid = 0 THEN\n" +
-		"  exec 'CREATE COLUMN TABLE \"" + database + "\".\"" + tableName + "\" " + tableColumns + "';\n " +
-		" END IF;\n" +
-	  "END;"
-	
-	_, err = db.Exec( createTableStr )
-	
+			"BEGIN\n" +
+			" myrowid := 0;\n" +
+			" SELECT COUNT(*) INTO myrowid FROM \"PUBLIC\".\"M_TABLES\" " +
+			" WHERE schema_name = '" + database + "' AND table_name = '" + tableName + "';\n" +
+			" IF :myrowid = 0 THEN\n" +
+			"  exec 'CREATE COLUMN TABLE \"" + database + "\".\"" + tableName + "\" " + tableColumns + "';\n " +
+			" END IF;\n" +
+			"END;"
+
+	_, err = db.Exec(createTableStr)
+
 	if err != nil {
 		logger.Printf("Error while creating procedure: %v", err)
-		logger.Printf( "Query: %v", createTableStr )
+		logger.Printf("Query: %v", createTableStr)
 	}
 
-	_, err = db.Exec( "CALL ifexists" )
+	_, err = db.Exec("CALL ifexists")
 
 	if err != nil {
 		logger.Printf("Error while invoking procedure: %v", err)
@@ -110,7 +110,7 @@ func (s *HANAPublisher) Publish(contentType string, content []byte, config map[s
 	insert, err := db.Prepare("INSERT INTO " + database + "." + tableName + " " + tableValues)
 	if err != nil {
 		logger.Printf("Error: %v", err)
-		logger.Printf( "tablename: " + database + "." + tableName + ", tableValues: " + tableValues )
+		logger.Printf("tablename: " + database + "." + tableName + ", tableValues: " + tableValues)
 		return err
 	}
 
@@ -164,12 +164,14 @@ func (f *HANAPublisher) GetConfigPolicy() (*cpolicy.ConfigPolicy, error) {
 	handleErr(err)
 	tableName.Description = "The HANA table within the database where information will be stored"
 
-	config.Add(host)
-	config.Add(username)
-	config.Add(password)
-	config.Add(database)
-	config.Add(port)
-	config.Add(tableName)
+	config.Add(
+		host,
+		username,
+		password,
+		database,
+		port,
+		tableName,
+	)
 
 	cp.Add([]string{""}, config)
 	return cp, nil
