@@ -16,6 +16,11 @@
 			"Rev": "544d1d673afb6b7e6f2f07331da79fb4de143d7e"
 		},
 		{
+			"ImportPath": "github.com/SAP/go-hdb/driver",
+			"Comment": "0.2.1",
+			"Rev": "be67a31e5623a352e6ddedf4141c3f877b9fb1c9"
+		},
+		{
 			"ImportPath": "github.com/jtolds/gls",
 			"Rev": "f1ac7f4f24f50328e6bc838ca4437d1612a0243c"
 		},
