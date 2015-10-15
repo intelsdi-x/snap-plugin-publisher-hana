@@ -117,18 +117,18 @@ func (s *HANAPublisher) Publish(contentType string, content []byte, config map[s
 	for _, m := range metrics {
 		key = sliceToString(m.Namespace())
 		value, err = interfaceToString(m.Data())
-		if err == nil {
-			_, err := insert.Exec(m.Timestamp(), m.Source(), key, value)
-			if err != nil {
-				panic(err)
-				logger.Printf("Error: %v", err)
-			}
-		} else {
+		if err != nil {
 			logger.Printf("Error: %v", err)
+			return err
+		}
+		_, err = insert.Exec(m.Timestamp(), m.Source(), key, value)
+		if err != nil {
+			logger.Printf("Error: %v", err)
+			return err
 		}
 	}
 
-	return err
+	return nil
 }
 
 func Meta() *plugin.PluginMeta {
