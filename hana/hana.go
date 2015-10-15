@@ -2,6 +2,7 @@ package hana
 
 import (
 	"bytes"
+	"database/sql"
 	"encoding/gob"
 	"errors"
 	"fmt"
@@ -11,12 +12,10 @@ import (
 
 	log "github.com/Sirupsen/logrus"
 
+	"github.com/SAP/go-hdb/driver"
 	"github.com/intelsdi-x/pulse/control/plugin"
 	"github.com/intelsdi-x/pulse/control/plugin/cpolicy"
 	"github.com/intelsdi-x/pulse/core/ctypes"
-
-	"database/sql"
-	"github.com/SAP/go-hdb/driver"
 )
 
 const (
