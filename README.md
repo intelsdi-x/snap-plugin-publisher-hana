@@ -17,5 +17,5 @@ See the License for the specific language governing permissions and
 limitations under the License.
 -->
 
-# pulse-plugin-publisher-hana
-Pulse Publisher Plugin for SAP Hana
+# snap-plugin-publisher-hana
+Snap Publisher Plugin for SAP Hana

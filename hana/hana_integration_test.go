@@ -27,8 +27,8 @@ import (
 	"testing"
 	"time"
 
-	"github.com/intelsdi-x/pulse/control/plugin"
-	"github.com/intelsdi-x/pulse/core/ctypes"
+	"github.com/intelsdi-x/snap/control/plugin"
+	"github.com/intelsdi-x/snap/core/ctypes"
 
 	. "github.com/smartystreets/goconvey/convey"
 )
@@ -49,7 +49,7 @@ func TestHANAPublish(t *testing.T) {
 	Convey("TestHANAPublish", t, func() {
 		config["username"] = ctypes.ConfigValueStr{Value: "root"}
 		config["password"] = ctypes.ConfigValueStr{Value: "root"}
-		config["database"] = ctypes.ConfigValueStr{Value: "PULSE_TEST"}
+		config["database"] = ctypes.ConfigValueStr{Value: "SNAP_TEST"}
 		config["host"] = ctypes.ConfigValueStr{Value: "localhost"}
 		config["port"] = ctypes.ConfigValueStr{Value: "1433"}
 		config["table name"] = ctypes.ConfigValueStr{Value: "info"}
@@ -60,7 +60,7 @@ func TestHANAPublish(t *testing.T) {
 		Convey("So not passing in a content type should result in an error", func() {
 			So(err, ShouldResemble, errors.New("Unknown content type ''"))
 		})
-		err = sp.Publish(plugin.PulseGOBContentType, buf.Bytes(), *cfg)
+		err = sp.Publish(plugin.SnapGOBContentType, buf.Bytes(), *cfg)
 		Convey("So publishing metrics should not result in an error", func() {
 			So(err, ShouldBeNil)
 		})
