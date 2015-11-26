@@ -24,9 +24,9 @@ package hana
 import (
 	"testing"
 
-	"github.com/intelsdi-x/pulse/control/plugin"
-	"github.com/intelsdi-x/pulse/control/plugin/cpolicy"
-	"github.com/intelsdi-x/pulse/core/ctypes"
+	"github.com/intelsdi-x/snap/control/plugin"
+	"github.com/intelsdi-x/snap/control/plugin/cpolicy"
+	"github.com/intelsdi-x/snap/core/ctypes"
 	. "github.com/smartystreets/goconvey/convey"
 )
 
@@ -63,7 +63,7 @@ func TestHANAPublisherPlugin(t *testing.T) {
 			testConfig["username"] = ctypes.ConfigValueStr{Value: "root"}
 			testConfig["password"] = ctypes.ConfigValueStr{Value: "root"}
 			testConfig["database"] = ctypes.ConfigValueStr{Value: "test"}
-			testConfig["tablename"] = ctypes.ConfigValueStr{Value: "PULSE_TEST"}
+			testConfig["tablename"] = ctypes.ConfigValueStr{Value: "SNAP_TEST"}
 			cfg, errs := configPolicy.Get([]string{""}).Process(testConfig)
 			Convey("So config policy should process testConfig and return a config", func() {
 				So(cfg, ShouldNotBeNil)
