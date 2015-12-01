@@ -39,7 +39,7 @@ import (
 
 const (
 	name       = "hana"
-	version    = 3
+	version    = 4
 	pluginType = plugin.PublisherPluginType
 )
 

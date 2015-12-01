@@ -8,9 +8,9 @@
 			"Rev": "55eb11d21d2a31a3cc93838241d04800f52e823d"
 		},
 		{
-			"Comment": "pulse2snap",
 			"ImportPath": "github.com/intelsdi-x/snap",
-			"Rev": "0c65a1359589a71aded24150402627210efb70d2"
+			"Comment": "v0.9.0-beta",
+			"Rev": "e62bd3b4bb1e5044bad152d9a90bf8bbfa881e8f"
 		},
 		{
 			"ImportPath": "github.com/SAP/go-hdb/driver",
