@@ -1,29 +1,26 @@
 {
 	"ImportPath": "github.com/intelsdi-x/snap-plugin-publisher-hana",
 	"GoVersion": "go1.5",
-	"Packages": [
-		"./..."
-	],
 	"Deps": [
 		{
 			"ImportPath": "github.com/SAP/go-hdb/driver",
-			"Comment": "v0.2.1",
-			"Rev": "be67a31e5623a352e6ddedf4141c3f877b9fb1c9"
+			"Comment": "v0.2.1-1-gfc0f019",
+			"Rev": "fc0f0192bd5e486a0552ee85052a4bb7807f28b1"
 		},
 		{
 			"ImportPath": "github.com/SAP/go-hdb/internal/bufio",
-			"Comment": "v0.2.1",
-			"Rev": "be67a31e5623a352e6ddedf4141c3f877b9fb1c9"
+			"Comment": "v0.2.1-1-gfc0f019",
+			"Rev": "fc0f0192bd5e486a0552ee85052a4bb7807f28b1"
 		},
 		{
 			"ImportPath": "github.com/SAP/go-hdb/internal/protocol",
-			"Comment": "v0.2.1",
-			"Rev": "be67a31e5623a352e6ddedf4141c3f877b9fb1c9"
+			"Comment": "v0.2.1-1-gfc0f019",
+			"Rev": "fc0f0192bd5e486a0552ee85052a4bb7807f28b1"
 		},
 		{
 			"ImportPath": "github.com/SAP/go-hdb/internal/unicode",
-			"Comment": "v0.2.1",
-			"Rev": "be67a31e5623a352e6ddedf4141c3f877b9fb1c9"
+			"Comment": "v0.2.1-1-gfc0f019",
+			"Rev": "fc0f0192bd5e486a0552ee85052a4bb7807f28b1"
 		},
 		{
 			"ImportPath": "github.com/Sirupsen/logrus",
@@ -31,55 +28,42 @@
 			"Rev": "55eb11d21d2a31a3cc93838241d04800f52e823d"
 		},
 		{
-			"ImportPath": "github.com/gopherjs/gopherjs/js",
-			"Rev": "9e79153c1c8dfa135136342df1ee0e8588f6d0d5"
-		},
-		{
 			"ImportPath": "github.com/intelsdi-x/snap/control/plugin",
-			"Comment": "v0.11.0-beta",
-			"Rev": "42d9567651258bba268d94701eb171458e459645"
+			"Comment": "v0.13.0-beta-77-g5c1177e",
+			"Rev": "5c1177efc47eccc10dc459e3be44083372ea08c3"
 		},
 		{
 			"ImportPath": "github.com/intelsdi-x/snap/core",
-			"Comment": "v0.11.0-beta",
-			"Rev": "42d9567651258bba268d94701eb171458e459645"
+			"Comment": "v0.13.0-beta-77-g5c1177e",
+			"Rev": "5c1177efc47eccc10dc459e3be44083372ea08c3"
 		},
 		{
 			"ImportPath": "github.com/intelsdi-x/snap/pkg/ctree",
-			"Comment": "v0.11.0-beta",
-			"Rev": "42d9567651258bba268d94701eb171458e459645"
+			"Comment": "v0.13.0-beta-77-g5c1177e",
+			"Rev": "5c1177efc47eccc10dc459e3be44083372ea08c3"
 		},
 		{
 			"ImportPath": "github.com/intelsdi-x/snap/pkg/schedule",
-			"Comment": "v0.11.0-beta",
-			"Rev": "42d9567651258bba268d94701eb171458e459645"
+			"Comment": "v0.13.0-beta-77-g5c1177e",
+			"Rev": "5c1177efc47eccc10dc459e3be44083372ea08c3"
 		},
 		{
 			"ImportPath": "github.com/intelsdi-x/snap/scheduler/wmap",
-			"Comment": "v0.11.0-beta",
-			"Rev": "42d9567651258bba268d94701eb171458e459645"
+			"Comment": "v0.13.0-beta-77-g5c1177e",
+			"Rev": "5c1177efc47eccc10dc459e3be44083372ea08c3"
 		},
 		{
-			"ImportPath": "github.com/jtolds/gls",
-			"Rev": "8ddce2a84170772b95dd5d576c48d517b22cac63"
-		},
-		{
-			"ImportPath": "github.com/smartystreets/assertions",
-			"Comment": "1.5.0-409-g5de9043",
-			"Rev": "5de9043ec1a39cc97edc838ef7236538a55b30a4"
-		},
-		{
-			"ImportPath": "github.com/smartystreets/goconvey/convey",
-			"Comment": "1.6.0-10-g995f5b2",
-			"Rev": "995f5b2e021c69b8b028ba6d0b05c1dd500783db"
+			"ImportPath": "github.com/robfig/cron",
+			"Comment": "v1-7-g32d9c27",
+			"Rev": "32d9c273155a0506d27cf73dd1246e86a470997e"
 		},
 		{
 			"ImportPath": "golang.org/x/text/transform",
-			"Rev": "6fc2e00a0d64b1f7fc1212dae5b0c939cf6d9ac4"
+			"Rev": "1b466db55e0ba5d56ef5315c728216b42f796491"
 		},
 		{
 			"ImportPath": "gopkg.in/yaml.v2",
-			"Rev": "f7716cbe52baa25d2e9b0d0da546fcf909fc16b4"
+			"Rev": "c1cd2254a6dd314c9d73c338c12688c9325d85c6"
 		}
 	]
 }

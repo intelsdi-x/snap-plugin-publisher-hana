@@ -34,12 +34,13 @@ import (
 	"github.com/SAP/go-hdb/driver"
 	"github.com/intelsdi-x/snap/control/plugin"
 	"github.com/intelsdi-x/snap/control/plugin/cpolicy"
+	"github.com/intelsdi-x/snap/core"
 	"github.com/intelsdi-x/snap/core/ctypes"
 )
 
 const (
 	name       = "hana"
-	version    = 5
+	version    = 6
 	pluginType = plugin.PublisherPluginType
 )
 
@@ -54,7 +55,7 @@ func NewHANAPublisher() *HANAPublisher {
 func (s *HANAPublisher) Publish(contentType string, content []byte, config map[string]ctypes.ConfigValue) error {
 	logger := log.New()
 	logger.Println("Publishing started")
-	var metrics []plugin.PluginMetricType
+	var metrics []plugin.MetricType
 
 	switch contentType {
 	case plugin.SnapGOBContentType:
@@ -134,13 +135,13 @@ func (s *HANAPublisher) Publish(contentType string, content []byte, config map[s
 
 	var key, value string
 	for _, m := range metrics {
-		key = sliceToString(m.Namespace())
+		key = sliceToString(m.Namespace().Strings())
 		value, err = interfaceToString(m.Data())
 		if err != nil {
 			logger.Printf("Error: %v", err)
 			return err
 		}
-		_, err = insert.Exec(m.Timestamp(), m.Source(), key, value)
+		_, err = insert.Exec(m.Timestamp(), m.Tags()[core.STD_TAG_PLUGIN_RUNNING_ON], key, value)
 		if err != nil {
 			logger.Printf("Error: %v", err)
 			return err

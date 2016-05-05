@@ -28,6 +28,7 @@ import (
 	"time"
 
 	"github.com/intelsdi-x/snap/control/plugin"
+	"github.com/intelsdi-x/snap/core"
 	"github.com/intelsdi-x/snap/core/ctypes"
 
 	. "github.com/smartystreets/goconvey/convey"
@@ -35,12 +36,12 @@ import (
 
 func TestHANAPublish(t *testing.T) {
 	var buf bytes.Buffer
-	metrics := []plugin.PluginMetricType{
-		*plugin.NewPluginMetricType([]string{"test_string"}, time.Now(), "", "example_string"),
-		*plugin.NewPluginMetricType([]string{"test_int"}, time.Now(), "", 1),
-		*plugin.NewPluginMetricType([]string{"test_string_slice"}, time.Now(), "", []string{"str1", "str2"}),
-		*plugin.NewPluginMetricType([]string{"test_string_slice"}, time.Now(), "", []int{1, 2}),
-		*plugin.NewPluginMetricType([]string{"test_uint8"}, time.Now(), "", uint8(1)),
+	metrics := []plugin.MetricType{
+		*plugin.NewMetricType(core.NewNamespace("test_string"), time.Now(), nil, "", "example_string"),
+		*plugin.NewMetricType(core.NewNamespace("test_int"), time.Now(), nil, "", 1),
+		*plugin.NewMetricType(core.NewNamespace("test_string_slice"), time.Now(), nil, "", []string{"str1", "str2"}),
+		*plugin.NewMetricType(core.NewNamespace("test_string_slice"), time.Now(), nil, "", []int{1, 2}),
+		*plugin.NewMetricType(core.NewNamespace("test_uint8"), time.Now(), nil, "", uint8(1)),
 	}
 	config := make(map[string]ctypes.ConfigValue)
 	enc := gob.NewEncoder(&buf)
