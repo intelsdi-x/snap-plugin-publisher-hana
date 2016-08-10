@@ -53,7 +53,7 @@ func TestHANAPublish(t *testing.T) {
 		config["database"] = ctypes.ConfigValueStr{Value: "SNAP_TEST"}
 		config["host"] = ctypes.ConfigValueStr{Value: "localhost"}
 		config["port"] = ctypes.ConfigValueStr{Value: "1433"}
-		config["table name"] = ctypes.ConfigValueStr{Value: "info"}
+		config["tablename"] = ctypes.ConfigValueStr{Value: "info"}
 		sp := NewHANAPublisher()
 		cp, _ := sp.GetConfigPolicy()
 		cfg, _ := cp.Get([]string{""}).Process(config)
