@@ -29,7 +29,7 @@ import (
 	"strconv"
 	"strings"
 
-	log "github.com/Sirupsen/logrus"
+	log "github.com/sirupsen/logrus"
 
 	"github.com/SAP/go-hdb/driver"
 	"github.com/intelsdi-x/snap/control/plugin"
