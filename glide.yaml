@@ -1,0 +1,31 @@
+package: github.com/intelsdi-x/snap-plugin-publisher-hana
+import:
+- package: github.com/SAP/go-hdb
+  version: fc0f0192bd5e486a0552ee85052a4bb7807f28b1
+  subpackages:
+  - driver
+  - internal/bufio
+  - internal/protocol
+  - internal/unicode
+- package: github.com/sirupsen/logrus
+- package: github.com/intelsdi-x/snap
+  version: ^2.0.0
+  subpackages:
+  - control/plugin
+  - core
+  - pkg/ctree
+  - pkg/schedule
+  - scheduler/wmap
+- package: github.com/robfig/cron
+  version: 32d9c273155a0506d27cf73dd1246e86a470997e
+- package: golang.org/x/text/transform
+  version: 1b466db55e0ba5d56ef5315c728216b42f796491
+- package: gopkg.in/yaml.v2
+  version: c1cd2254a6dd314c9d73c338c12688c9325d85c6
+testImport:
+- package: github.com/smartystreets/goconvey
+  version: 995f5b2e021c69b8b028ba6d0b05c1dd500783db
+  subpackages:
+  - convey
+- package: github.com/smartystreets/assertions
+  version: 443d812296a84445c202c085f19e18fc238f8250
